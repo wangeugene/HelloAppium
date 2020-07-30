@@ -23,14 +23,13 @@ public class CalculatorTest {
     static AppiumDriver<MobileElement> driver;
 
     public static void main(String[] args) throws MalformedURLException {
-        openCalculator();
+        openMiguReader();
     }
 
-    public static void openCalculator() throws MalformedURLException {
+    public static void openMiguReader() throws MalformedURLException {
         // Row: 0 _id=57, name=android_id, value=500b83af3f3c4598
         DesiredCapabilities cap = new DesiredCapabilities();
-        cap.setCapability("deviceName", "OPPO R11 Plus");
-        cap.setCapability("'udid", "shamu");
+        cap.setCapability("deviceName", "127.0.0.1:62001 device"); // adb devices
         cap.setCapability("platformName", "Android");
         cap.setCapability("platformVersion", "5.1.1");
         cap.setCapability("appPackage", "com.ophone.reader.ui");
