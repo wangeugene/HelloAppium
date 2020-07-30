@@ -1,2 +1,12 @@
 # Project exclude paths
 /target/
+.idea/.gitignore
+.idea/codeStyles
+.idea/compiler.xml
+.idea/dbnavigator.xml
+.idea/inspectionProfiles/
+.idea/jarRepositories.xml
+.idea/misc.xml
+.idea/vcs.xml
+HelloAppium.iml
+src/main/
