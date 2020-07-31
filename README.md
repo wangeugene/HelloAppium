@@ -16,4 +16,5 @@
 <li>install SDk (5.1 API level 24) via Android Studio, set Android_HOME environment variable</li>
 <li>install Appium version 1.15</li>
 <li>check with appium-doctor --android for dependencies completeness</li>
+<li>install APK info to find the required info for app activity </li>
 </ol>
