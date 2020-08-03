@@ -21,3 +21,16 @@
 <li>https://github.com/Kitware/CMake/releases/download/v3.18.1/cmake-3.18.1-win64-x64.msi</li>
 <li>npm i -g opencv4nodejs</li>
 </ol>
+
+##夜神模拟器5.1.1
+设置-》开发者模式-》打开坐标/打开USB调试/ 
+
+## version 一定要对，版本不对，连不上！
+正确的版本
+![alt text](markdown/version.png "测试成功")
+RUNNING
+![logo](markdown/running.png)
+
+
+##Author 
+Eugene Wang ALLRIGHTS RESERVED@2020

@@ -96,9 +96,10 @@ public class CalculatorTest {
     private static void readFromActivityPage(TouchAction touchAction) throws InterruptedException, IOException, URISyntaxException {
         // start Reading Task
         Thread.sleep(2000);
-        System.out.println("点击活动页面我知道了");
         // install cmake for windows first see readme.md
+        // failed to install openCV
         // npm i -g opencv4nodejs
+//        System.out.println("点击活动页面我知道了");
 //        try {
 //            MobileElement elementByImage = driver.findElementByImage(getReferenceImageB64("IGOTIT.png"));
 //            if(elementByImage != null ){
@@ -109,23 +110,26 @@ public class CalculatorTest {
 //            System.out.println("require Node JS OpenCV");
 //        }
 
-        List<MobileElement> IgotItButton = (List<MobileElement>) driver.findElementsByLinkText("我知道了");
-        if (!CollectionUtils.isEmpty(IgotItButton)) {
-            System.out.println("点击我知道了按钮FOUND");
-            IgotItButton.get(0).click();
-        }
+        //
+//        List<MobileElement> IgotItButton = (List<MobileElement>) driver.findElementsByLinkText("我知道了");
+//        if (!CollectionUtils.isEmpty(IgotItButton)) {
+//            System.out.println("点击我知道了按钮FOUND");
+//            IgotItButton.get(0).click();
+//        }
+
+        System.out.println("坐标点击我知道了");
         touchAction.press(PointOption.point(430, 1338)).release().perform();
         Thread.sleep(2000);
-        System.out.println("点击去阅读");
+        System.out.println("坐标点击去阅读");
         // 点击去阅读
         touchAction.press(PointOption.point(728, 963)).release().perform();
         Thread.sleep(2000);
         // 点击一本书 //
-        System.out.println("点击一本书");
+        System.out.println("坐标点击一本书");
         touchAction.press(PointOption.point(375, 1194)).release().perform();
         Thread.sleep(2000);
         // 点击免费试读
-        System.out.println("点击免费试读");
+        System.out.println("坐标点击免费试读");
         touchAction.press(PointOption.point(623, 1527)).release().perform();
         Thread.sleep(2000);
         // 开始翻页
