@@ -30,6 +30,8 @@
 ![alt text](markdown/version.png "测试成功")
 RUNNING
 ![logo](markdown/running.png)
+DONATE 技术支持
+![MONEY](markdown/wechatpay.jpg)
 
 
 ##Author 
