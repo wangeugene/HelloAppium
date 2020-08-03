@@ -17,4 +17,7 @@
 <li>install Appium version 1.15</li>
 <li>check with appium-doctor --android for dependencies completeness</li>
 <li>install APK info to find the required info for app activity </li>
+<li>install cmake first </li>
+<li>https://github.com/Kitware/CMake/releases/download/v3.18.1/cmake-3.18.1-win64-x64.msi</li>
+<li>npm i -g opencv4nodejs</li>
 </ol>

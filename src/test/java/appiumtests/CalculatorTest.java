@@ -4,19 +4,20 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.offset.PointOption;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.<br/>
@@ -35,10 +36,14 @@ public class CalculatorTest {
     static final long ONE_MINUTES_IN_MILLIS = 60000;
 
     public static void main(String[] args) throws MalformedURLException, InterruptedException {
-        openMiguReader();
+        try {
+            openMiguReader();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    public static void openMiguReader() throws MalformedURLException, InterruptedException {
+    public static void openMiguReader() throws IOException, InterruptedException, URISyntaxException {
         // Row: 0 _id=57, name=android_id, value=500b83af3f3c4598
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability("noReset", true);
@@ -61,11 +66,14 @@ public class CalculatorTest {
         readFromActivityPage(touchAction);
         returnToHomePage(touchAction);
         homeToReadActivityPage(touchAction);
+        returnToHomePage(touchAction);
         signedTheActivityPage(touchAction);
 
     }
 
     private static void signedTheActivityPage(TouchAction touchAction) throws InterruptedException {
+        System.out.println("点击活动页面我知道了");
+        Thread.sleep(2000);
         // 点击我知道了。
         touchAction.press(PointOption.point(430, 1300)).release().perform();
         Thread.sleep(2000);
@@ -78,30 +86,66 @@ public class CalculatorTest {
         System.out.println("Task should be done");
     }
 
-    private static void readFromActivityPage(TouchAction touchAction) throws InterruptedException {
+    public static String getReferenceImageB64(String imageName) throws URISyntaxException, IOException {
+        URL refImgUrl = CalculatorTest.class.getClassLoader().getResource(imageName);
+        System.out.println("imageURL:" + refImgUrl);
+        File refImgFile = Paths.get(refImgUrl.toURI()).toFile();
+        return Base64.getEncoder().encodeToString(Files.readAllBytes(refImgFile.toPath()));
+    }
+
+    private static void readFromActivityPage(TouchAction touchAction) throws InterruptedException, IOException, URISyntaxException {
         // start Reading Task
-        // 点击我知道了。
-        touchAction.press(PointOption.point(430, 1300)).release().perform();
         Thread.sleep(2000);
+        System.out.println("点击活动页面我知道了");
+        // install cmake for windows first see readme.md
+        // npm i -g opencv4nodejs
+//        try {
+//            MobileElement elementByImage = driver.findElementByImage(getReferenceImageB64("IGOTIT.png"));
+//            if(elementByImage != null ){
+//                System.out.println("IGOTIT Button Image found");
+//                elementByImage.click();
+//            }
+//        } catch (Exception e) {
+//            System.out.println("require Node JS OpenCV");
+//        }
+
+        List<MobileElement> IgotItButton = (List<MobileElement>) driver.findElementsByLinkText("我知道了");
+        if (!CollectionUtils.isEmpty(IgotItButton)) {
+            System.out.println("点击我知道了按钮FOUND");
+            IgotItButton.get(0).click();
+        }
+        touchAction.press(PointOption.point(430, 1338)).release().perform();
+        Thread.sleep(2000);
+        System.out.println("点击去阅读");
         // 点击去阅读
         touchAction.press(PointOption.point(728, 963)).release().perform();
         Thread.sleep(2000);
         // 点击一本书 //
+        System.out.println("点击一本书");
         touchAction.press(PointOption.point(375, 1194)).release().perform();
         Thread.sleep(2000);
         // 点击免费试读
+        System.out.println("点击免费试读");
         touchAction.press(PointOption.point(623, 1527)).release().perform();
         Thread.sleep(2000);
         // 开始翻页
         enterReadingLoop(touchAction);
     }
 
-    private static void returnToHomePage(TouchAction touchAction) throws InterruptedException {
+    private static void returnToHomePage(TouchAction touchAction) throws InterruptedException, IOException, URISyntaxException {
         // center click
-        touchAction.press(PointOption.point(100, 100)).release().perform();
+        System.out.println("点击屏幕中央");
+        touchAction.press(PointOption.point(441, 753)).release().perform();
         // <=
-        touchAction.press(PointOption.point(50, 100)).release().perform();
+        System.out.println("点击返回按钮");
+        touchAction.press(PointOption.point(51, 108)).release().perform();
+//        MobileElement leftArrow = driver.findElementByImage(getReferenceImageB64("LEFTARROW.png"));
+//        if(leftArrow != null){
+//            System.out.println("发现返回按钮");
+//        }
+        System.out.println("寻找并点击主页按钮");
         List<MobileElement> homeButton = driver.findElementsById("com.ophone.reader.ui:id/icon_common_home");
+        int count = 00;
         while (CollectionUtils.isEmpty(homeButton)) {
             System.out.println("Home Button not found at: " + new Date().getTime());
             Thread.sleep(2000);
@@ -110,8 +154,14 @@ public class CalculatorTest {
                 leftArrowId.get(0).click();
             }
             homeButton = driver.findElementsById("com.ophone.reader.ui:id/icon_common_home");
+            count++;
+            if (count > 3) {
+                break;
+            }
         }
-        homeButton.get(0).click();
+        if(!CollectionUtils.isEmpty(homeButton)){
+            homeButton.get(0).click();
+        }
     }
 
     private static void homeToReadActivityPage(TouchAction touchAction) throws InterruptedException {
@@ -120,10 +170,19 @@ public class CalculatorTest {
 
         // 检查有没有后退箭头
         List<MobileElement> leftArrowId = driver.findElementsById("com.ophone.reader.ui:id/web_back_arrowhead");
-        while(!CollectionUtils.isEmpty(leftArrowId)) {
-            System.out.println("<= found by id");
-            leftArrowId.get(0).click();
-            // 退出到没有箭头
+        try {
+            int count = 0;
+            while (!CollectionUtils.isEmpty(leftArrowId)) {
+                System.out.println("<= found by id");
+                leftArrowId.get(0).click();
+                Thread.sleep(2000);
+                count++;
+                if (count > 2) {
+                    break;
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("crashed...");
         }
         // touch 图书 again
         touchAction.press(PointOption.point(274, 1524)).release().perform();
@@ -133,20 +192,24 @@ public class CalculatorTest {
             System.out.println("Waiting for search box 1 shows up at: " + new Date().getTime());
             Thread.sleep(3000);
             searchBox1 = driver.findElementsById("com.ophone.reader.ui:id/recom_bookstore_default_search_text");
-            List<MobileElement> leftArrow = driver.findElementsByAccessibilityId("返回箭头");
-            if (!CollectionUtils.isEmpty(leftArrow)) {
-                System.out.println("<= found by access id");
-                leftArrow.get(0).click();
-            }
-            leftArrowId = driver.findElementsById("com.ophone.reader.ui:id/titlebar_level_2_back_button");
-            while(!CollectionUtils.isEmpty(leftArrowId)) {
-                System.out.println("<= found by id");
-                leftArrowId.get(0).click();
-                // 退出到没有箭头
+            try {
+                leftArrowId = driver.findElementsById("com.ophone.reader.ui:id/titlebar_level_2_back_button");
+                int count = 0;
+                while (!CollectionUtils.isEmpty(leftArrowId)) {
+                    System.out.println("<= found by id");
+                    leftArrowId.get(0).click();
+                    Thread.sleep(2000);
+                    if (count > 2) {
+                        break;
+                    }
+                    // 退出到没有箭头
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
-        Thread.sleep(3000);
+        Thread.sleep(2000);
         searchBox1.get(0).click();
 
         List<MobileElement> searchBox2 = driver.findElementsById("com.ophone.reader.ui:id/etSearch");
