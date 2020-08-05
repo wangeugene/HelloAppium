@@ -4,6 +4,7 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.offset.PointOption;
+import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,11 +64,11 @@ public class CalculatorTest {
 
         skipFirstAdPage();
         homeToReadActivityPage(touchAction);
-        readFromActivityPage(touchAction);
-        returnToHomePage(touchAction);
-        homeToReadActivityPage(touchAction);
-        returnToHomePage(touchAction);
-        signedTheActivityPage(touchAction);
+//        readFromActivityPage(touchAction);
+//        returnToHomePage(touchAction);
+//        homeToReadActivityPage(touchAction);
+//        returnToHomePage(touchAction);
+//        signedTheActivityPage(touchAction);
 
     }
 
@@ -163,7 +164,7 @@ public class CalculatorTest {
                 break;
             }
         }
-        if(!CollectionUtils.isEmpty(homeButton)){
+        if (!CollectionUtils.isEmpty(homeButton)) {
             homeButton.get(0).click();
         }
     }
@@ -171,6 +172,12 @@ public class CalculatorTest {
     private static void homeToReadActivityPage(TouchAction touchAction) throws InterruptedException {
         // touch 图书
         touchAction.press(PointOption.point(274, 1524)).release().perform();
+
+        List<MobileElement> books = driver.findElementsByClassName("图书");
+        if (!CollectionUtils.isEmpty(books)) {
+            System.out.println("books TAB found 1");
+            // can't find what's needed
+        }
 
         // 检查有没有后退箭头
         List<MobileElement> leftArrowId = driver.findElementsById("com.ophone.reader.ui:id/web_back_arrowhead");
@@ -193,22 +200,23 @@ public class CalculatorTest {
 
         List<MobileElement> searchBox1 = driver.findElementsById("com.ophone.reader.ui:id/recom_bookstore_default_search_text");
         while (CollectionUtils.isEmpty(searchBox1)) {
-            System.out.println("Waiting for search box 1 shows up at: " + new Date().getTime());
+            String nowString = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+            System.out.println("Waiting for search box 1 shows up at: " + nowString);
             Thread.sleep(3000);
             searchBox1 = driver.findElementsById("com.ophone.reader.ui:id/recom_bookstore_default_search_text");
             try {
                 leftArrowId = driver.findElementsById("com.ophone.reader.ui:id/titlebar_level_2_back_button");
                 int count = 0;
                 while (!CollectionUtils.isEmpty(leftArrowId)) {
-                    System.out.println("<= found by id");
+                    System.out.println("<= found by titlebar_level_2_back_button");
                     leftArrowId.get(0).click();
                     Thread.sleep(2000);
-                    if (count > 2) {
-                        break;
-                    }
+                    System.out.println("break on <=");
+                    break;
                     // 退出到没有箭头
                 }
             } catch (InterruptedException e) {
+                System.out.println("crashed 2");
                 e.printStackTrace();
             }
         }
@@ -219,8 +227,9 @@ public class CalculatorTest {
         List<MobileElement> searchBox2 = driver.findElementsById("com.ophone.reader.ui:id/etSearch");
         while (CollectionUtils.isEmpty(searchBox2)) {
             Thread.sleep(3000);
+            String nowString = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
             searchBox2 = driver.findElementsById("com.ophone.reader.ui:id/etSearch");
-            System.out.println("Waiting for search box 2 shows up at: " + new Date().getTime());
+            System.out.println("Waiting for search box 2 shows up at: " + nowString);
         }
 
         MobileElement searchBoxElement = searchBox2.get(0);
@@ -228,9 +237,11 @@ public class CalculatorTest {
 
         // Touch History
         touchAction.press(PointOption.point(200, 950)).release().perform();
+        System.out.println("点击历史下拉");
         Thread.sleep(2000);
         // 点击进入天天爱阅读活动页面
         touchAction.press(PointOption.point(782, 333)).release().perform();
+        System.out.println("点击进入");
         Thread.sleep(2000);
         System.out.println("天天爱阅读活动界面");
     }
@@ -268,16 +279,14 @@ public class CalculatorTest {
 
     private static void enterReadingLoop(TouchAction touchAction) throws InterruptedException {
         // enter reading loop, click next page every 5 seconds
-        Calendar calendar = Calendar.getInstance();
-        long nowTimeInMillis = calendar.getTimeInMillis();
-        Date now = calendar.getTime();
-        Date date15MinutesLater = new Date(nowTimeInMillis + (15 * ONE_MINUTES_IN_MILLIS));
+        Date now = new Date();
+        Date date15MinutesLater = new Date(now.getTime() + (15 * ONE_MINUTES_IN_MILLIS));
         while (now.before(date15MinutesLater)) {
             touchAction.press(PointOption.point(888, 888)).release().perform();
-            System.out.println("turning a page at: " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date()));
+            System.out.println("turning a page at: " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(now));
             Thread.sleep(5000);
-            now = calendar.getTime();
+            now = new Date();
         }
-        System.out.println("Reading Task Done at: " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date()));
+        System.out.println("Reading Task Done at: " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(now));
     }
 }
