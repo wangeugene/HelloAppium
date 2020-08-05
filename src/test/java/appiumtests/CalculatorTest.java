@@ -18,6 +18,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -35,6 +37,7 @@ public class CalculatorTest {
     final static Logger log = LoggerFactory.getLogger(CalculatorTest.class.getName());
     static AppiumDriver<MobileElement> driver;
     static final long ONE_MINUTES_IN_MILLIS = 60000;
+    static Instant bootTime = Instant.now();
 
     public static void main(String[] args) throws MalformedURLException, InterruptedException {
         try {
@@ -170,13 +173,24 @@ public class CalculatorTest {
     }
 
     private static void homeToReadActivityPage(TouchAction touchAction) throws InterruptedException {
-        // touch 图书
+        // touch 图书 [191,1446][359,1600] com.ophone.reader.ui:id/fixed_bottom_navigation_icon many
         touchAction.press(PointOption.point(274, 1524)).release().perform();
 
-        List<MobileElement> books = driver.findElementsByClassName("图书");
-        if (!CollectionUtils.isEmpty(books)) {
-            System.out.println("books TAB found 1");
-            // can't find what's needed
+        try {
+            // elementId in Attribute view in Appium Desktop crashed
+//            MobileElement book = driver.findElementById("c0cc9a86-2fbb-44d6-b288-d8c763c8a0ea");
+//            if (book != null) {
+//                System.out.println("BOOK found by element Id");
+//                // can't find what's needed
+//            }
+//            MobileElement book2 = driver.findElement(By.id("c0cc9a86-2fbb-44d6-b288-d8c763c8a0ea"));
+//            if (book2 != null) {
+//                System.out.println("BOOK found by element Id 2");
+//                // can't find what's needed
+//            }
+            // both book1 and book2 won't work
+        } catch (Exception e) { System.out.println("crashed no found");
+            e.printStackTrace();
         }
 
         // 检查有没有后退箭头
@@ -243,7 +257,7 @@ public class CalculatorTest {
         touchAction.press(PointOption.point(782, 333)).release().perform();
         System.out.println("点击进入");
         Thread.sleep(2000);
-        System.out.println("天天爱阅读活动界面");
+        System.out.println("天天爱阅读活动界面: time elapsed: " + Duration.between(bootTime, Instant.now()).toMillis() / 1000 );
     }
 
     private static void skipFirstAdPage() throws InterruptedException {
