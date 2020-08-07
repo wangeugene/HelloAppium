@@ -1,6 +1,7 @@
 package appiumtests;
 
 
+import appium.CalculatorTest;
 import org.junit.Test;
 import org.springframework.util.Assert;
 
