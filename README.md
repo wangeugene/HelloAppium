@@ -2,8 +2,8 @@
 
 <ol>
  <li>There is serious compatible issue with SDK version and Appium Version and Android Emulator Version</li>
- <li>Appium 1.16 not compatible with Nox Emulator Android version 5.1.1</li>
- <li>Appium 1.15 compatible with Nox Emulator Android version 5.1.1</li>
+ <li>Appium 1.16 not compatible with Nox Emulator Android version 7.1.2</li>
+ <li>Appium 1.15 compatible with Nox Emulator Android version 7.1.2</li>
  <li>Android SDK version 5.1 Lollipop</li>
  <li>Don't use AVD from Android studio, x86 version not compatible with apk compiled with arm instructions</li>
  </ol>
@@ -22,7 +22,7 @@
 <li>npm i -g opencv4nodejs</li>
 </ol>
 
-##夜神模拟器5.1.1
+##夜神模拟器7.1.2
 设置-》开发者模式-》打开坐标/打开USB调试/ 
 
 ## version 一定要对，版本不对，连不上！
