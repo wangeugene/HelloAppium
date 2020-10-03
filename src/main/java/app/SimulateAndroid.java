@@ -8,11 +8,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalTime;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by IntelliJ IDEA.<br/>
@@ -45,7 +46,7 @@ public class SimulateAndroid {
 //        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);//设置超时等待时间,默认250ms
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(SimulateAndroid.class);
+    private static final Logger logger = getLogger(SimulateAndroid.class);
 
     public static AndroidDriver<MobileElement> getDriver(String appPackage, String appActivity, String version) {
         DesiredCapabilities cap = new DesiredCapabilities();
