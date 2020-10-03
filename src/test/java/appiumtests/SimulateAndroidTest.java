@@ -1,12 +1,7 @@
 package appiumtests;
 
 
-import app.SimulateAndroid;
-import io.appium.java_client.AppiumDriver;
 import org.junit.Test;
-import org.openqa.selenium.By;
-
-import java.util.List;
 
 /**
  * created by intellij idea.<br/>
@@ -19,9 +14,9 @@ public class SimulateAndroidTest {
 
     @Test
     public void getDriver() {
-        AppiumDriver driver = SimulateAndroid.getDriver("com.ophone.reader.ui", "com.cmread.bplusc.bookshelf.LocalMainActivity", "7.1.2");
-        List elements = driver.findElements(By.className("图书"));
-        System.out.println(elements);
+//        AppiumDriver driver = SimulateAndroid.getDriver("com.ophone.reader.ui", "com.cmread.bplusc.bookshelf.LocalMainActivity", "7.1.2");
+//        List elements = driver.findElements(By.className("图书"));
+//        System.out.println(elements);
     }
 
 }
