@@ -40,6 +40,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class SimulateAndroid {
 
     private static final Logger logger = getLogger(SimulateAndroid.class);
+    private static final String SKIP_ID = "com.ophone.reader.ui:id/tv_classification";
 
     public static void main(String[] args) throws InterruptedException {
         AndroidDriver<MobileElement> driver = getDriver("com.ophone.reader.ui", "com.cmread.bplusc.bookshelf.LocalMainActivity", "7.1.2");
@@ -47,7 +48,7 @@ public class SimulateAndroid {
             return;
         }
         AndroidTouchAction touchAction = new AndroidTouchAction(driver);
-        clickById("com.ophone.reader.ui:id/tv_classification", driver);
+        clickById(driver);
         try {
             MobileElement backArrowElement = driver.findElement(By.id("com.ophone.reader.ui:id/titlebar_level_2_back_button"));
             if (backArrowElement != null) {
@@ -57,17 +58,17 @@ public class SimulateAndroid {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        delayTouch("天天爱阅读", 568, 1206, 5000, touchAction);
-        delayTouch("我知道了", 520, 1492, 5000, touchAction);
-        delayTouch("去阅读", 876, 1188, 5000, touchAction);
-        delayTouch("正在读的一本书", 169, 1557, 5000, touchAction);
+        delayTouch("天天爱阅读", 568, 1206, touchAction);
+        delayTouch("我知道了", 520, 1492, touchAction);
+        delayTouch("去阅读", 876, 1188, touchAction);
+        delayTouch("正在读的一本书", 169, 1557, touchAction);
         Instant now = Instant.now();
         Instant nowPlus15minsEpoch = now.plus(15, ChronoUnit.MINUTES);
         while (now.isBefore(nowPlus15minsEpoch)) {
             now = Instant.now();
-            delayTouch("翻页", 1000, 1210, 5000, touchAction);
+            delayTouch("翻页", 1000, 1210, touchAction);
         }
-        delayTouch("签到", 867, 1371, 5000, touchAction);
+        delayTouch("签到", 867, 1371, touchAction);
     }
 
     public static AndroidDriver<MobileElement> getDriver(String appPackage, String appActivity, String version) {
@@ -98,14 +99,14 @@ public class SimulateAndroid {
     }
 
 
-    private static void clickById(String elementId, AndroidDriver<MobileElement> driver) {
+    private static void clickById(AndroidDriver<MobileElement> driver) {
         try {
-            MobileElement element = driver.findElement(By.id(elementId));
+            MobileElement element = driver.findElement(By.id(SKIP_ID));
             if (element != null) {
-                logger.info("clicked skip found={} ", elementId);
+                logger.info("clicked skip found={} ", SKIP_ID);
                 element.click();
             } else {
-                logger.info("skip failed no found={} ", elementId);
+                logger.info("skip failed no found={} ", SKIP_ID);
             }
             Thread.sleep(2000);
         } catch (Exception e) {
@@ -113,9 +114,9 @@ public class SimulateAndroid {
         }
     }
 
-    private static void delayTouch(String msg, int xOffset, int yOffset, int delayMilliseconds, AndroidTouchAction action) throws InterruptedException {
+    private static void delayTouch(String msg, int xOffset, int yOffset, AndroidTouchAction action) throws InterruptedException {
         logger.info("click {} touch at coordinates x={}, y={}", msg, xOffset, yOffset);
-        Thread.sleep(delayMilliseconds);
+        Thread.sleep(5000);
         action.tap(PointOption.point(xOffset, yOffset)).release().perform();
     }
 
