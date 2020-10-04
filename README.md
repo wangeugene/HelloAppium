@@ -1,4 +1,4 @@
-##Nox模拟器
+##Nox模拟器成功配置记录
 <ol>
  <li>There is serious compatible issue with SDK version and Appium Version and Android Emulator Version</li>
  <li>Appium 1.16 not compatible with Nox Emulator Android version 6.1.2</li>
@@ -21,8 +21,14 @@
 <li>npm i -g opencv4nodejs</li>
 </ol>
 
-##逍遥模拟器7.1.2 (以下都是实测可行的配置参数)
+##APPs links:
+http://appium.io/downloads.html
+https://developer.android.google.cn/studio/
+https://www.memuplay.com/
+
+##MeMu 逍遥模拟器7.1.2 (以下都是实测可行的配置参数)
 设置-》开发者模式-》打开坐标/打开USB调试/ 
+Google Frame installation -> ApkInfo App
 
 ##Appium Desktop Settings Json
 {
@@ -36,7 +42,43 @@
   "appActivity": "com.cmread.bplusc.bookshelf.LocalMainActivity"
 }
 
-##adb devices 必须显示出来
+##Android studio
+sdk manager -> api level
+appium
+
+##环境变量设置
+ANDROID_HOME=C:\Users\eugene\AppData\Local\Android\Sdk
+ANDROID_SDK_ROOT=C:\Users\eugene\AppData\Local\Android\Sdk
+APPDATA=C:\Users\eugene\AppData\Roaming
+ChocolateyInstall=C:\ProgramData\chocolatey
+ChocolateyLastPathUpdate=132456609379932831
+ChocolateyToolsLocation=C:\tools
+CommonProgramFiles=C:\Program Files\Common Files
+CommonProgramFiles(x86)=C:\Program Files (x86)\Common Files
+CommonProgramW6432=C:\Program Files\Common Files
+COMPUTERNAME=DESKTOP-3Q5911B
+ComSpec=C:\WINDOWS\system32\cmd.exe
+DriverData=C:\Windows\System32\Drivers\DriverData
+GIT_HOME=C:\Program Files\Git
+HOMEDRIVE=C:
+HOMEPATH=\Users\eugene
+JAVA_HOME=C:\Program Files\Java\jdk-15
+LOCALAPPDATA=C:\Users\eugene\AppData\Local
+LOGONSERVER=\\DESKTOP-3Q5911B
+M2_HOME=C:\ProgramData\chocolatey\lib\maven\apache-maven-3.6.3
+NUMBER_OF_PROCESSORS=24
+OneDrive=C:\Users\eugene\OneDrive
+OneDriveConsumer=C:\Users\eugene\OneDrive
+OS=Windows_NT
+Path=C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;
+C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;
+C:\ProgramData\chocolatey\lib\maven\apache-maven-3.6.3\bin;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;
+C:\Program Files (x86)\dotnet\;C:\Program Files\nodejs\;C:\Program Files\Java\jdk-15\bin;C:\Users\eugene\AppData\Local\Android\Sdk\bin;
+C:\Users\eugene\AppData\Local\Android\Sdk\bin;C:\Users\eugene\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;
+C:\Program Files\Git\bin;C:\Users\eugene\AppData\Local\Microsoft\WindowsApps;C:\Users\eugene\AppData\Local\GitHubDesktop\bin;
+C:\Users\eugene\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\eugene\AppData\Roaming\npm
+
+### adb devices 必须显示出来
 > PS C:\Users\eugene\IdeaProjects\HelloAppium> adb devices
 List of devices attached
 127.0.0.1:21503 device

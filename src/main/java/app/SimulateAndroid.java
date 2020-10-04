@@ -3,7 +3,9 @@ package app;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidTouchAction;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.touch.offset.PointOption;
+import io.appium.java_client.windows.PressesKeyCode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
@@ -68,6 +70,7 @@ public class SimulateAndroid {
             now = Instant.now();
             delayTouch("翻页", 1000, 1210, touchAction);
         }
+//        driver.pressKey();
         delayTouch("签到", 867, 1371, touchAction);
     }
 
