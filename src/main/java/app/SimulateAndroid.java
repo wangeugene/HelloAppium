@@ -10,11 +10,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -43,8 +46,10 @@ public class SimulateAndroid {
 
     private static final Logger logger = getLogger(SimulateAndroid.class);
     private static final String SKIP_ID = "com.ophone.reader.ui:id/tv_classification";
+    private static Random random = new Random();
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
+        Runtime.getRuntime().exec("adb connect 127.0.0.1:21503");
         AndroidDriver<MobileElement> driver = getDriver("com.ophone.reader.ui", "com.cmread.bplusc.bookshelf.LocalMainActivity", "7.1.2");
         if (driver == null) {
             return;
@@ -119,7 +124,9 @@ public class SimulateAndroid {
 
     private static void delayTouch(String msg, int xOffset, int yOffset, AndroidTouchAction action) throws InterruptedException {
         logger.info("click {} touch at coordinates x={}, y={}", msg, xOffset, yOffset);
-        Thread.sleep(5000);
+        int delaySeconds = random.nextInt(15000);
+        logger.info("delaySeconds={}", delaySeconds);
+        Thread.sleep(delaySeconds);
         action.tap(PointOption.point(xOffset, yOffset)).release().perform();
     }
 
