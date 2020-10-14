@@ -46,7 +46,7 @@ Google Frame installation -> ApkInfo App
 sdk manager -> api level
 appium
 
-##环境变量设置
+##环境变量设置 
 ANDROID_HOME=C:\Users\eugene\AppData\Local\Android\Sdk
 ANDROID_SDK_ROOT=C:\Users\eugene\AppData\Local\Android\Sdk
 APPDATA=C:\Users\eugene\AppData\Roaming
@@ -77,6 +77,7 @@ C:\Program Files (x86)\dotnet\;C:\Program Files\nodejs\;C:\Program Files\Java\jd
 C:\Users\eugene\AppData\Local\Android\Sdk\bin;C:\Users\eugene\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;
 C:\Program Files\Git\bin;C:\Users\eugene\AppData\Local\Microsoft\WindowsApps;C:\Users\eugene\AppData\Local\GitHubDesktop\bin;
 C:\Users\eugene\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\eugene\AppData\Roaming\npm
+> gci env:* | sort-object name
 
 ### adb devices 必须显示出来
 > PS C:\Users\eugene\IdeaProjects\HelloAppium> adb devices
@@ -88,7 +89,7 @@ List of devices attached
 >adb devices
 
 
-
+[![APPIUM中文说明](http://img.youtube.com/vi/OC8W_7TvzAU/0.jpg)](https://www.youtube.com/watch?v=OC8W_7TvzAU&t=119s&ab_channel=YuzhenWang)
 
 
 

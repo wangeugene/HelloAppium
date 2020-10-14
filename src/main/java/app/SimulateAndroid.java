@@ -3,21 +3,20 @@ package app;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidTouchAction;
-import io.appium.java_client.android.nativekey.KeyEvent;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.touch.offset.PointOption;
-import io.appium.java_client.windows.PressesKeyCode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.ServerSocket;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -41,14 +40,25 @@ import static org.slf4j.LoggerFactory.getLogger;
  * driver.findElement(By.id(searchBox2Id)).sendKeys("天天爱阅读");
  * }
  * passed sonarLint and code inspection
+ * powershell
+ * gci env:* | sort-object name
  */
 public class SimulateAndroid {
 
     private static final Logger logger = getLogger(SimulateAndroid.class);
     private static final String SKIP_ID = "com.ophone.reader.ui:id/tv_classification";
+    public static final int PORT = 4237;
     private static Random random = new Random();
 
+    /**
+     * @param args
+     * @throws InterruptedException
+     * @throws IOException          start Appium and MeMu before running this
+     */
     public static void main(String[] args) throws InterruptedException, IOException {
+        if (!checkIfServerIsRunning(PORT)) {
+            startAppiumServer();
+        }
         Runtime.getRuntime().exec("adb connect 127.0.0.1:21503");
         AndroidDriver<MobileElement> driver = getDriver("com.ophone.reader.ui", "com.cmread.bplusc.bookshelf.LocalMainActivity", "7.1.2");
         if (driver == null) {
@@ -75,8 +85,18 @@ public class SimulateAndroid {
             now = Instant.now();
             delayTouch("翻页", 1000, 1210, touchAction);
         }
-//        driver.pressKey();
         delayTouch("签到", 867, 1371, touchAction);
+    }
+
+    /**
+     * start the default appium server
+     * just like running appium in CLI (powershell)
+     * or start appium desktop server by clicking the UI
+     * it automatically enables the debug level log
+     */
+    public static void startAppiumServer() {
+        AppiumDriverLocalService server = AppiumDriverLocalService.buildDefaultService();
+        server.start();
     }
 
     public static AndroidDriver<MobileElement> getDriver(String appPackage, String appActivity, String version) {
@@ -106,6 +126,16 @@ public class SimulateAndroid {
         }
     }
 
+    public static boolean checkIfServerIsRunning(int port) {
+        try (ServerSocket serverSocket = new ServerSocket(port);
+        ) {
+            logger.info("serverSocket is  available!");
+            return false;
+        } catch (IOException e) {
+            logger.info("serverSocket is not available!");
+            return true;
+        }
+    }
 
     private static void clickById(AndroidDriver<MobileElement> driver) {
         try {
