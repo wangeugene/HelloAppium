@@ -24,7 +24,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.logging.version>1.7.7</slf4j.logging.version>
         <junit.version>4.12</junit.version>
-        <apache.logging.version>2.13.1</apache.logging.version>
+        <apache.logging.version>2.13.3</apache.logging.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
