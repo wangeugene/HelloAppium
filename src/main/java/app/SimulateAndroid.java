@@ -42,13 +42,14 @@ import static org.slf4j.LoggerFactory.getLogger;
  * passed sonarLint and code inspection
  * powershell
  * gci env:* | sort-object name
+ * https://account.jetbrains.com/a/p8qpblcx
  */
 public class SimulateAndroid {
 
     private static final Logger logger = getLogger(SimulateAndroid.class);
     private static final String SKIP_ID = "com.ophone.reader.ui:id/tv_classification";
     public static final int PORT = 4237;
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     /**
      * @param args
@@ -62,7 +63,10 @@ public class SimulateAndroid {
         Runtime.getRuntime().exec("adb connect 127.0.0.1:21503");
         AndroidDriver<MobileElement> driver = getDriver("com.ophone.reader.ui", "com.cmread.bplusc.bookshelf.LocalMainActivity", "7.1.2");
         if (driver == null) {
+            logger.info("driver={} empty", driver);
             return;
+        } else {
+            logger.info("driver={} found", driver);
         }
         AndroidTouchAction touchAction = new AndroidTouchAction(driver);
         clickById(driver);
@@ -127,7 +131,7 @@ public class SimulateAndroid {
     }
 
     public static boolean checkIfServerIsRunning(int port) {
-        try (ServerSocket serverSocket = new ServerSocket(port);
+        try (ServerSocket serverSocket = new ServerSocket(port)
         ) {
             logger.info("serverSocket is  available!");
             return false;
