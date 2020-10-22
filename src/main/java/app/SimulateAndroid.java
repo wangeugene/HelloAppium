@@ -3,6 +3,8 @@ package app;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidTouchAction;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
@@ -50,6 +52,7 @@ public class SimulateAndroid {
     private static final String SKIP_ID = "com.ophone.reader.ui:id/tv_classification";
     public static final int PORT = 4237;
     private static final Random random = new Random();
+    private static boolean initialState = true;
 
     /**
      * @param args
@@ -79,17 +82,23 @@ public class SimulateAndroid {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        delayTouch("天天爱阅读", 568, 1206, touchAction);
-        delayTouch("我知道了", 520, 1492, touchAction);
-        delayTouch("去阅读", 876, 1188, touchAction);
-        delayTouch("正在读的一本书", 169, 1557, touchAction);
+        delayTouch("天天爱阅读", 568, 1206, touchAction, true);
+        delayTouch("我知道了", 520, 1492, touchAction, true);
+        delayTouch("去阅读", 876, 1188, touchAction, true);
+        delayTouch("正在读的一本书", 169, 1557, touchAction, true);
+        initialState = false; // start random space timing paging
         Instant now = Instant.now();
         Instant nowPlus15minsEpoch = now.plus(15, ChronoUnit.MINUTES);
         while (now.isBefore(nowPlus15minsEpoch)) {
             now = Instant.now();
-            delayTouch("翻页", 1000, 1210, touchAction);
+            delayTouch("翻页", 1000, 1210, touchAction, false);
         }
-        delayTouch("签到", 867, 1371, touchAction);
+        driver.pressKey(new KeyEvent(AndroidKey.BACK)); // Back Key in the home menu
+        Thread.sleep(2000);
+        driver.pressKey(new KeyEvent(AndroidKey.BACK)); // Back Key in the home menu
+        Thread.sleep(2000); // should in the home directory now
+        delayTouch("天天爱阅读", 568, 1206, touchAction, true);
+        delayTouch("签到", 867, 1371, touchAction, true);
     }
 
     /**
@@ -156,11 +165,15 @@ public class SimulateAndroid {
         }
     }
 
-    private static void delayTouch(String msg, int xOffset, int yOffset, AndroidTouchAction action) throws InterruptedException {
+    private static void delayTouch(String msg, int xOffset, int yOffset, AndroidTouchAction action, boolean fixedDelay) throws InterruptedException {
         logger.info("click {} touch at coordinates x={}, y={}", msg, xOffset, yOffset);
         int delaySeconds = random.nextInt(15000);
         logger.info("delaySeconds={}", delaySeconds);
-        Thread.sleep(delaySeconds);
+        if (fixedDelay) {
+            Thread.sleep(1000);
+        } else {
+            Thread.sleep(delaySeconds);
+        }
         action.tap(PointOption.point(xOffset, yOffset)).release().perform();
     }
 
