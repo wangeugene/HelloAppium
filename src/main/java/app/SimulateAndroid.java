@@ -7,10 +7,14 @@ import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.touch.offset.PointOption;
+import io.appium.java_client.windows.PressesKeyCode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ServerSocket;
@@ -50,17 +54,30 @@ public class SimulateAndroid {
 
     private static final Logger logger = getLogger(SimulateAndroid.class);
     private static final String SKIP_ID = "com.ophone.reader.ui:id/tv_classification";
-    public static final int PORT = 4237;
+    public static final int APPIUM_PORT = 4237;
+    public static final int EMULATOR_PORT = 25001;
     private static final Random random = new Random();
     private static boolean initialState = true;
+    private static Robot robot;
 
     /**
      * @param args
      * @throws InterruptedException
      * @throws IOException          start Appium and MeMu before running this
      */
-    public static void main(String[] args) throws InterruptedException, IOException {
-        if (!checkIfServerIsRunning(PORT)) {
+    public static void main(String[] args) throws InterruptedException, IOException, AWTException {
+        for (int i = 0; i < 3; i++) {
+            tryDailyTasks();
+        }
+    }
+
+    private static void tryDailyTasks() throws AWTException, IOException, InterruptedException {
+        if (!checkIfServerIsRunning(EMULATOR_PORT)) {
+            // Appium Server
+            startAndroidEmulator();
+        }
+        if (!checkIfServerIsRunning(APPIUM_PORT)) {
+            // Appium Server
             startAppiumServer();
         }
         Runtime.getRuntime().exec("adb connect 127.0.0.1:21503");
@@ -99,6 +116,33 @@ public class SimulateAndroid {
         Thread.sleep(2000); // should in the home directory now
         delayTouch("天天爱阅读", 568, 1206, touchAction, true);
         delayTouch("签到", 867, 1371, touchAction, true);
+    }
+
+    /**
+     * start MEMU if port is not in used
+     */
+    public static void startAndroidEmulator() throws AWTException {
+        robot = new Robot();
+        robot.keyPress(java.awt.event.KeyEvent.VK_WINDOWS);
+        robot.keyRelease(java.awt.event.KeyEvent.VK_WINDOWS);
+        robotSendString("MEMU");
+    }
+
+    private static void robotSendString(String text) {
+        StringSelection stringSelection = new StringSelection(text);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, stringSelection);
+        robot.keyPress(java.awt.event.KeyEvent.VK_CONTROL);
+        robot.keyPress(java.awt.event.KeyEvent.VK_V);
+        robot.keyRelease(java.awt.event.KeyEvent.VK_V);
+        robot.keyRelease(java.awt.event.KeyEvent.VK_CONTROL);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        robot.keyPress(java.awt.event.KeyEvent.VK_ENTER);
+        robot.keyRelease(java.awt.event.KeyEvent.VK_ENTER);
     }
 
     /**
