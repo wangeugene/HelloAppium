@@ -10,7 +10,6 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d %-5p (%F:%L) - %m%n"/>
         </Console>
-
         <RollingRandomAccessFile name="ErrorLog"
                                  fileName="${LOG_HOME}/${ERROR_LOG_FILE_NAME}.log"
                                  filePattern="${LOG_HOME}/${ERROR_LOG_FILE_NAME}.log.%d{yyyy-MM-dd}.gz">
@@ -22,7 +21,6 @@
             </Policies>
             <DefaultRolloverStrategy max="20"/>
         </RollingRandomAccessFile>
-
     </Appenders>
     <Loggers>
         <!-- 3rdparty Loggers -->
@@ -36,7 +34,7 @@
         </logger>
 
         <logger name="com.hafiz.www.controller" level="error" includeLocation="true" additivity="false">
-            <appender-ref ref="ErrorLog"/>
+<!--            <appender-ref ref="ErrorLog"/>-->
             <appender-ref ref="Console"/>
         </logger>
 

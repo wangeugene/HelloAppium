@@ -3,14 +3,12 @@ package app;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidTouchAction;
-import io.appium.java_client.android.nativekey.AndroidKey;
-import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.touch.offset.PointOption;
-import io.appium.java_client.windows.PressesKeyCode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
+import org.springframework.util.StringUtils;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -19,10 +17,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.URL;
-import java.time.Instant;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -49,36 +49,52 @@ import static org.slf4j.LoggerFactory.getLogger;
  * powershell
  * gci env:* | sort-object name
  * https://account.jetbrains.com/a/p8qpblcx
+ * <p>
+ * com.soft.blued:id/tv_areacode
+ * com.soft.blued:id/edit_lay
+ * com.soft.blued:id/search_edt
+ * com.soft.blued:id/search_view
+ * com.soft.blued:id/tv_sign_up
+ * com.soft.blued:id/cb_terms
+ * com.soft.blued:id/tv_to_register
+ * <p>
  * {
- *   "platformName": "Android",
- *   "platformVersion": "7.1.2",
- *   "deviceName": "127.0.0.1:21503",
- *   "noReset": true,
- *   "noSign": true,
- *   "unicodeKeyboard": true,
- *   "appPackage": "com.ophone.reader.ui",
- *   "appActivity": "com.cmread.bplusc.bookshelf.LocalMainActivity"
+ * "platformName": "android",
+ * "appActivity": "com.soft.blued.ui.welcome.FirstActivity",
+ * "appPackage": "com.soft.blued",
+ * "deviceName": "127.0.0.1:21503",
+ * "noReset": true,
+ * "noSign": true,
+ * "platformVersion": "7.1.2",
+ * "resetKeyboard": true,
+ * "unicodeKeyboard": true,
+ * "deviceUDID": "127.0.0.1:21503",
+ * "deviceApiLevel": 25,
+ * "deviceScreenSize": "1080x1920",
+ * "deviceScreenDensity": 360,
+ * "deviceModel": "PCRT00",
+ * "deviceManufacturer": "OPPO"
  * }
  */
-public class SimulateAndroid {
+public class BluedAndroid {
 
-    private static final Logger logger = getLogger(SimulateAndroid.class);
+    private static final Logger logger = getLogger(BluedAndroid.class);
     private static final String SKIP_ID = "com.ophone.reader.ui:id/tv_classification";
     public static final int APPIUM_PORT = 4237;
     public static final int EMULATOR_PORT = 25001;
     private static final Random random = new Random();
     private static boolean initialState = true;
     private static Robot robot;
+    private static AndroidTouchAction touchAction;
+    private static AndroidDriver<MobileElement> driver;
 
     /**
-     * @param args
+     * @param
      * @throws InterruptedException
      * @throws IOException          start Appium and MeMu before running this
      */
     public static void main(String[] args) throws InterruptedException, IOException, AWTException {
-        for (int i = 0; i < 3; i++) {
-            tryDailyTasks();
-        }
+        tryDailyTasks();
     }
 
     private static void tryDailyTasks() throws AWTException, IOException, InterruptedException {
@@ -91,41 +107,34 @@ public class SimulateAndroid {
             startAppiumServer();
         }
         Runtime.getRuntime().exec("adb connect 127.0.0.1:21503");
-        AndroidDriver<MobileElement> driver = getDriver("com.ophone.reader.ui", "com.cmread.bplusc.bookshelf.LocalMainActivity", "7.1.2");
+        AndroidDriver<MobileElement> driver = getDriver("com.soft.blued", "com.soft.blued.ui.welcome.FirstActivity", "7.1.2");
         if (driver == null) {
             logger.info("driver={} empty", driver);
             return;
         } else {
             logger.info("driver={} found", driver);
         }
-        AndroidTouchAction touchAction = new AndroidTouchAction(driver);
-        clickById(driver);
-        try {
-            MobileElement backArrowElement = driver.findElement(By.id("com.ophone.reader.ui:id/titlebar_level_2_back_button"));
-            if (backArrowElement != null) {
-                logger.info("backArrowElement={}", backArrowElement);
-                backArrowElement.click();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        delayTouch("天天爱阅读", 568, 1206, touchAction, true);
-        delayTouch("我知道了", 520, 1492, touchAction, true);
-        delayTouch("去阅读", 876, 1188, touchAction, true);
-        delayTouch("正在读的一本书", 169, 1557, touchAction, true);
-        initialState = false; // start random space timing paging
-        Instant now = Instant.now();
-        Instant nowPlus15minsEpoch = now.plus(15, ChronoUnit.MINUTES);
-        while (now.isBefore(nowPlus15minsEpoch)) {
-            now = Instant.now();
-            delayTouch("翻页", 1000, 1210, touchAction, false);
-        }
-        driver.pressKey(new KeyEvent(AndroidKey.BACK)); // Back Key in the home menu
-        Thread.sleep(2000);
-        driver.pressKey(new KeyEvent(AndroidKey.BACK)); // Back Key in the home menu
-        Thread.sleep(2000); // should in the home directory now
-        delayTouch("天天爱阅读", 568, 1206, touchAction, true);
-        delayTouch("签到", 867, 1371, touchAction, true);
+        touchAction = new AndroidTouchAction(driver);
+        Thread.sleep(5000);
+        driver.findElementById("com.soft.blued:id/tv_sign_up").click();
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/tv_areacode").click();
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/edit_lay").click();
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/search_edt").sendKeys("China");
+        Thread.sleep(1000);
+        touch("[0,178][946,299]"); // touch +86
+        Thread.sleep(3000);
+        List<MobileElement> elementsByClassName = driver.findElementsByClassName("android.widget.EditText");
+        elementsByClassName.get(0).sendKeys("17324452143");
+        elementsByClassName.get(1).sendKeys("Public@pass1");
+        Thread.sleep(500);
+        driver.findElementById("com.soft.blued:id/cb_terms").click();
+        Thread.sleep(10000);
+        System.out.println("给你10秒拖动滑块到位置");
+        driver.findElementById("com.soft.blued:id/tv_to_register").click();
+        Thread.sleep(1000);
     }
 
     /**
@@ -178,7 +187,6 @@ public class SimulateAndroid {
         cap.setCapability("appPackage", appPackage);
         cap.setCapability("appActivity", appActivity);
         URL url;
-        AndroidDriver<MobileElement> driver = null;
         try {
             url = new URL("http://127.0.0.1:4723/wd/hub");
             driver = new AndroidDriver<>(url, cap);
@@ -219,16 +227,31 @@ public class SimulateAndroid {
         }
     }
 
-    private static void delayTouch(String msg, int xOffset, int yOffset, AndroidTouchAction action, boolean fixedDelay) throws InterruptedException {
-        logger.info("click {} touch at coordinates x={}, y={}", msg, xOffset, yOffset);
-        int delaySeconds = random.nextInt(15000);
-        logger.info("delaySeconds={}", delaySeconds);
-        if (fixedDelay) {
-            Thread.sleep(1000);
-        } else {
-            Thread.sleep(delaySeconds);
-        }
-        action.tap(PointOption.point(xOffset, yOffset)).release().perform();
+    /**
+     * @param touchMatrix
+     * @throws InterruptedException suitable for the format for appium desktop
+     *                              [946,178][1080,299]
+     */
+    private static void touch(String touchMatrix) throws InterruptedException {
+        String spaceString = touchMatrix.replaceAll("\\[|\\]|\\,", " ");
+        List<Integer> list = Arrays.stream(spaceString.split("\\s+"))
+                .filter(Predicate.not(StringUtils::isEmpty))
+                .map(v -> v.trim())
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+        System.out.println(list);
+        // find the center of the matrix
+        int xOffset = (list.get(0) + list.get(2)) / 2;
+        int yOffset = (list.get(1) + list.get(3)) / 2;
+        System.out.println(xOffset + "  :  " + yOffset);
+        logger.info("touch at coordinates x={}, y={}", xOffset, yOffset);
+        System.out.println("touch at coordinates x={}:" + xOffset + "  " + yOffset);
+        touchAction.tap(PointOption.point(xOffset, yOffset)).release().perform();
     }
 
+//    public static void main(String[] args) throws InterruptedException {
+//        touch("[946,178][1080,299]");
+//    }
+
 }
+
