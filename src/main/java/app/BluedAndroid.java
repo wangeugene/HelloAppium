@@ -74,6 +74,11 @@ import static org.slf4j.LoggerFactory.getLogger;
  * "deviceModel": "PCRT00",
  * "deviceManufacturer": "OPPO"
  * }
+ * adb devicecs
+ * adb shell
+ * ipconfig
+ * ip route
+ * 192.168.123.207
  */
 public class BluedAndroid {
 
@@ -85,6 +90,8 @@ public class BluedAndroid {
     private static Robot robot;
     private static AndroidTouchAction touchAction;
     private static AndroidDriver<MobileElement> driver;
+    private static String deviceName;
+    private static String version;
 
     /**
      * @param
@@ -104,8 +111,14 @@ public class BluedAndroid {
             // Appium Server
             startAppiumServer();
         }
-        Runtime.getRuntime().exec("adb connect 127.0.0.1:21503");
-        AndroidDriver<MobileElement> driver = getDriver("com.soft.blued", "com.soft.blued.ui.welcome.FirstActivity", "7.1.2");
+        deviceName = "127.0.0.1:21503"; // Emulator
+        version = "7.1.2";
+        String registerPhone = "17053668901";
+        String receiveSMSValidCode = "199101";
+//        deviceName = "MLCBB20901213542"; // HUAWEI Permission DENIED
+//        version = "10";
+        Runtime.getRuntime().exec("adb connect " + deviceName);
+        AndroidDriver<MobileElement> driver = getDriver("com.soft.blued", "com.soft.blued.ui.welcome.FirstActivity", version);
         if (driver == null) {
             logger.info("driver={} empty", driver);
             return;
@@ -125,7 +138,7 @@ public class BluedAndroid {
         touch("[0,178][946,299]"); // touch +86
         Thread.sleep(3000);
         List<MobileElement> elementsByClassName = driver.findElementsByClassName("android.widget.EditText");
-        elementsByClassName.get(0).sendKeys("17053668907");
+        elementsByClassName.get(0).sendKeys(registerPhone);
         elementsByClassName.get(1).sendKeys("Public@pass1");
         Thread.sleep(500);
         driver.findElementById("com.soft.blued:id/cb_terms").click();
@@ -137,18 +150,10 @@ public class BluedAndroid {
         Thread.sleep(7000);
         driver.findElementById("com.soft.blued:id/inputView").click();
         Thread.sleep(1000);
-        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
-        Thread.sleep(1000);
-        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
-        Thread.sleep(1000);
-        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
-        Thread.sleep(1000);
-        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
-        Thread.sleep(1000);
-        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
-        Thread.sleep(1000);
-        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
-        Thread.sleep(1000);
+        for (int i = 0; i < 6; i++) {
+            driver.findElementById("com.soft.blued:id/inputView").sendKeys(String.valueOf(receiveSMSValidCode.charAt(i)));
+            Thread.sleep(1000);
+        }
         driver.findElementById("com.soft.blued:id/tv_confirm").click();
         Thread.sleep(6000000);
         System.out.println("DONE");
@@ -199,7 +204,7 @@ public class BluedAndroid {
         cap.setCapability("unicodeKeyboard", true);
         cap.setCapability("resetKeyboard", true);
         cap.setCapability("noSign", true);
-        cap.setCapability("deviceName", "127.0.0.1:21503"); // adb devices
+        cap.setCapability("deviceName", deviceName); // adb devices
         cap.setCapability("platformName", "Android");
         cap.setCapability("platformVersion", version);
         cap.setCapability("appPackage", appPackage);
