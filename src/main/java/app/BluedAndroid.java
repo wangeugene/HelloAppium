@@ -5,7 +5,6 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidTouchAction;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.touch.offset.PointOption;
-import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
@@ -79,7 +78,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class BluedAndroid {
 
     private static final Logger logger = getLogger(BluedAndroid.class);
-    private static final String SKIP_ID = "com.ophone.reader.ui:id/tv_classification";
     public static final int APPIUM_PORT = 4237;
     public static final int EMULATOR_PORT = 25001;
     private static final Random random = new Random();
@@ -127,14 +125,34 @@ public class BluedAndroid {
         touch("[0,178][946,299]"); // touch +86
         Thread.sleep(3000);
         List<MobileElement> elementsByClassName = driver.findElementsByClassName("android.widget.EditText");
-        elementsByClassName.get(0).sendKeys("17324452143");
+        elementsByClassName.get(0).sendKeys("17053668907");
         elementsByClassName.get(1).sendKeys("Public@pass1");
         Thread.sleep(500);
         driver.findElementById("com.soft.blued:id/cb_terms").click();
-        Thread.sleep(10000);
-        System.out.println("给你10秒拖动滑块到位置");
+        Thread.sleep(5000);
+        System.out.println("给你5秒拖动滑块到位置");
         driver.findElementById("com.soft.blued:id/tv_to_register").click();
         Thread.sleep(1000);
+        System.out.println("给你7秒输入验证码");
+        Thread.sleep(7000);
+        driver.findElementById("com.soft.blued:id/inputView").click();
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/inputView").sendKeys("1");
+        Thread.sleep(1000);
+        driver.findElementById("com.soft.blued:id/tv_confirm").click();
+        Thread.sleep(6000000);
+        System.out.println("DONE");
+
     }
 
     /**
@@ -209,21 +227,6 @@ public class BluedAndroid {
         } catch (IOException e) {
             logger.info("serverSocket is not available!");
             return true;
-        }
-    }
-
-    private static void clickById(AndroidDriver<MobileElement> driver) {
-        try {
-            MobileElement element = driver.findElement(By.id(SKIP_ID));
-            if (element != null) {
-                logger.info("clicked skip found={} ", SKIP_ID);
-                element.click();
-            } else {
-                logger.info("skip failed no found={} ", SKIP_ID);
-            }
-            Thread.sleep(2000);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
