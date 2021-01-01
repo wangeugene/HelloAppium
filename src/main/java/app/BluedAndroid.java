@@ -92,6 +92,7 @@ public class BluedAndroid {
     private static AndroidDriver<MobileElement> driver;
     private static String deviceName;
     private static String version;
+    private static String appActivity;
 
     /**
      * @param
@@ -104,21 +105,16 @@ public class BluedAndroid {
 
     private static void tryDailyTasks() throws AWTException, IOException, InterruptedException {
         if (!checkIfServerIsRunning(EMULATOR_PORT)) {
-            // Appium Server
             startAndroidEmulator();
         }
         if (!checkIfServerIsRunning(APPIUM_PORT)) {
-            // Appium Server
             startAppiumServer();
         }
-        deviceName = "127.0.0.1:21503"; // Emulator
-        version = "7.1.2";
-        String registerPhone = "17053668901";
+        String registerPhone = "19965412403";
         String receiveSMSValidCode = "199101";
-//        deviceName = "MLCBB20901213542"; // HUAWEI Permission DENIED
-//        version = "10";
+        setEmulator();
         Runtime.getRuntime().exec("adb connect " + deviceName);
-        AndroidDriver<MobileElement> driver = getDriver("com.soft.blued", "com.soft.blued.ui.welcome.FirstActivity", version);
+        AndroidDriver<MobileElement> driver = getDriver("com.soft.blued", appActivity, version);
         if (driver == null) {
             logger.info("driver={} empty", driver);
             return;
@@ -127,16 +123,18 @@ public class BluedAndroid {
         }
         touchAction = new AndroidTouchAction(driver);
         Thread.sleep(5000);
+//        driver.findElementById("com.soft.blued:id/tv_positive_ordinary").click();
+        Thread.sleep(2000);
         driver.findElementById("com.soft.blued:id/tv_sign_up").click();
         Thread.sleep(1000);
-        driver.findElementById("com.soft.blued:id/tv_areacode").click();
-        Thread.sleep(1000);
-        driver.findElementById("com.soft.blued:id/edit_lay").click();
-        Thread.sleep(1000);
-        driver.findElementById("com.soft.blued:id/search_edt").sendKeys("China");
-        Thread.sleep(1000);
-        touch("[0,178][946,299]"); // touch +86
-        Thread.sleep(3000);
+//        driver.findElementById("com.soft.blued:id/tv_areacode").click();
+//        Thread.sleep(1000);
+//        driver.findElementById("com.soft.blued:id/edit_lay").click();
+//        Thread.sleep(1000);
+//        driver.findElementById("com.soft.blued:id/search_edt").sendKeys("China");
+//        Thread.sleep(1000);
+//        touch("[0,178][946,299]"); // touch +86
+//        Thread.sleep(3000);
         List<MobileElement> elementsByClassName = driver.findElementsByClassName("android.widget.EditText");
         elementsByClassName.get(0).sendKeys(registerPhone);
         elementsByClassName.get(1).sendKeys("Public@pass1");
@@ -154,7 +152,7 @@ public class BluedAndroid {
             driver.findElementById("com.soft.blued:id/inputView").sendKeys(String.valueOf(receiveSMSValidCode.charAt(i)));
             Thread.sleep(1000);
         }
-        driver.findElementById("com.soft.blued:id/tv_confirm").click();
+//        driver.findElementById("com.soft.blued:id/tv_confirm").click();
         Thread.sleep(6000000);
         System.out.println("DONE");
 
@@ -168,6 +166,18 @@ public class BluedAndroid {
         robot.keyPress(java.awt.event.KeyEvent.VK_WINDOWS);
         robot.keyRelease(java.awt.event.KeyEvent.VK_WINDOWS);
         robotSendString("MEMU");
+    }
+
+    private static void setEmulator() {
+        deviceName = "127.0.0.1:21503"; // Emulator
+        version = "7.1.2";
+        appActivity = "com.soft.blued.ui.welcome.FirstActivity";
+    }
+
+    public static void setHuaWeiPhone() throws AWTException {
+        deviceName = "MLCBB20901213542"; // Emulator
+        version = "10";
+        appActivity = "com.soft.blued.ui.home.HomeActivity";
     }
 
     private static void robotSendString(String text) {
